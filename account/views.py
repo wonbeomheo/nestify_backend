@@ -61,14 +61,14 @@ class UserDetailDeleteView(APIView):
   
   def delete(self, request, id):
     if not NestifyUser.objects.filter(pk=id).exists():
-      raise NotFound('There is no user with id {id}')
+      raise NotFound(f'There is no user with id {id}')
     NestifyUser.objects.filter(pk=id).delete()
     response = Response({}, status=HTTP_204_NO_CONTENT)
     return response
   
   def put(self,request, id):
     if not NestifyUser.objects.filter(pk=id).exists():
-      raise NotFound('There is no user with id {id}')
+      raise NotFound(f'There is no user with id {id}')
     serializer = UserUpdateSerializer(data=request.data)
     if not serializer.is_valid():
       raise ValidationError(serializer.errors)
