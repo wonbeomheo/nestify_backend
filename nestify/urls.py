@@ -18,9 +18,11 @@ from django.contrib import admin
 from django.urls import include, path
 from oauth2_provider import urls as oauth2_urls
 from account import urls as account_urls
+from nest import urls as nest_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include(oauth2_urls)),
     path('api/users/', include(account_urls)),
+    path('api/nests/', include(nest_urls)),
 ]

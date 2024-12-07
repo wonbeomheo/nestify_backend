@@ -9,7 +9,8 @@ def nestify_exception_handler(exc, context):
   logger.error(exc)
   # if APIException
   response = Response(
-    data=exc.get_full_details()
+    data=exc.get_full_details(),
+    status=exc.status_code
   )
   # if SystemError
   
