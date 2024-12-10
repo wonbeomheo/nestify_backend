@@ -21,6 +21,8 @@ class Nest(models.Model):
 class Room(models.Model):
   nest = models.ForeignKey(Nest, related_name="rooms", on_delete=models.CASCADE)
   name = models.CharField(max_length=100)
+  is_activated = models.BooleanField(default=True)
+  is_base = models.BooleanField(default=False)
   created_at = models.DateTimeField(auto_now_add=True)
   
   def __str__(self):

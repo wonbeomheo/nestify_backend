@@ -6,7 +6,7 @@ from .models import NestifyUser
 class UserSerializer(ModelSerializer, ListModelMixin):
   class Meta:
     model = NestifyUser()
-    fields = ['id', 'name', 'email', 'last_login', 'is_staff', 'is_superuser']
+    fields = ['id', 'name', 'email', 'balance', 'membership', 'is_staff', 'is_superuser']
     
 class UserCreateSerializer(ModelSerializer):
   password2 = CharField(
@@ -38,8 +38,8 @@ class UserCreateSerializer(ModelSerializer):
     )
     return user
   
-class UserUpdateSerializer(HyperlinkedModelSerializer):
+class UserUpdateSerializer(ModelSerializer):
   class Meta:
     model = NestifyUser
-    fields = ['is_staff']
+    fields = ['membership', 'is_staff']
     
