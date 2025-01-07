@@ -1,29 +1,29 @@
 from rest_framework.serializers import ModelSerializer
-from .models import Item, ItemProperty, ItemPropertyAssignment, ItemPropertyValue
+from .models import Item, Property, PropertyAssignment, PropertyValue
 
 
-class ItemPropertySerializer(ModelSerializer):
+class PropertySerializer(ModelSerializer):
   class Meta:
-    model = ItemProperty
+    model = Property
     fields = '__all__'
     
 
-class ItemPropertyValueSerializer(ModelSerializer):
-  property = ItemPropertySerializer(many=False)
+class PropertyValueSerializer(ModelSerializer):
+  property = PropertySerializer(many=False)
   
   class Meta:
-    model = ItemPropertyValue
+    model = PropertyValue
     fields = '__all__'
 
 
-class ItemPropertyAssignmentSerializer(ModelSerializer):
+class PropertyAssignmentSerializer(ModelSerializer):
   class Meta:
-    model = ItemPropertyAssignment
+    model = PropertyAssignment
     fields = ('id', 'property', 'value', 'item')
     read_only_fields = ('id', 'item')
 
 class ItemSerializer(ModelSerializer):
-  properties = ItemPropertyAssignmentSerializer(many=True)
+  properties = PropertyAssignmentSerializer(many=True)
   
   class Meta:
     model = Item
@@ -41,7 +41,7 @@ class CreateItemSerializer(ModelSerializer):
     return item
     
 class UpdateItemSerializer(ModelSerializer):
-  properties = ItemPropertyAssignmentSerializer(many=True)
+  properties = PropertyAssignmentSerializer(many=True)
   
   class Meta:
     model = Item
@@ -64,7 +64,7 @@ class UpdateItemSerializer(ModelSerializer):
     for property, value in requested_properties_map.items():
       print(property)
       if not existing_assignments.filter(property=property, value=value).exists():
-        ItemPropertyAssignment.objects.create(
+        PropertyAssignment.objects.create(
           item=instance,
           property=property,
           value=value

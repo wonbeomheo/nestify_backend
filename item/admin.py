@@ -1,37 +1,37 @@
 from django.contrib import admin
-from .models import Item, ItemProperty, ItemPropertyAssignment, ItemPropertyValue, ItemPurchase, RoomItem, Transaction
+from .models import Item, Property, PropertyAssignment, PropertyValue, ItemPurchased, RoomItemPurchasedAssignment, Transaction
 
 
-class ItemPropertyValueInline(admin.TabularInline):
-  model = ItemPropertyValue
+class PropertyValueInline(admin.TabularInline):
+  model = PropertyValue
   extra = 1
   can_delete = True
   
 
-class ItemPropertyAssignmentInline(admin.TabularInline):
-  model = ItemPropertyAssignment
+class PropertyAssignmentInline(admin.TabularInline):
+  model = PropertyAssignment
   extra = 1
   can_delete = True
-  autocomplete_fields = ["property", "value"]
+  autocomplete_fields = ["property"]
   
-@admin.register(ItemProperty)
-class ItemPropertyAdmin(admin.ModelAdmin):
-  list_display = ("name",)
+@admin.register(Property)
+class PropertyAdmin(admin.ModelAdmin):
+  list_display = ("name", "value")
   search_fields = ("name",)
-  inilnes = [ItemPropertyValueInline]
+  inilnes = [PropertyValueInline]
   
-@admin.register(ItemPropertyValue)
-class ItemPropertyValueAdmin(admin.ModelAdmin):
-  list_display = ("property", "value")
+@admin.register(PropertyValue)
+class PropertyValueAdmin(admin.ModelAdmin):
+  list_display = ("value",)
   search_fields = ("value",)
-  list_filter = ("property",)
+  list_filter = ("value",)
   
 @admin.register(Item)
 class ItemAdmin(admin.ModelAdmin):
   list_display = ("name", "price", "created_at")
   search_fields = ("name",)
-  inlines = [ItemPropertyAssignmentInline]
+  inlines = [PropertyAssignmentInline]
   
-admin.site.register(ItemPurchase)
-admin.site.register(RoomItem)
+admin.site.register(ItemPurchased)
+admin.site.register(RoomItemPurchasedAssignment)
 admin.site.register(Transaction)

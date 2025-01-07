@@ -15,37 +15,36 @@ class Item(models.Model):
     return self.name
   
 
-class ItemProperty(models.Model):
+class Property(models.Model):
+  class Meta:
+    unique_together = ("name", "value")
+    
   name = models.CharField(max_length=100, unique=True)
+  value = models.ForeignKey('PropertyValue', on_delete=models.CASCADE, related_name="values")
   
   def __str__(self):
     return self.name
   
   
-class ItemPropertyValue(models.Model):
-  property = models.ForeignKey(ItemProperty, on_delete=models.CASCADE, related_name="values")
+class PropertyValue(models.Model):
   value = models.CharField(max_length=100)
-  
-  class Meta:
-    unique_together = ("property", "value")
     
   def __str__(self):
     return f"{self.property.name}: {self.value}"
   
 
-class ItemPropertyAssignment(models.Model):
+class PropertyAssignment(models.Model):
   item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="properties")
-  property = models.ForeignKey(ItemProperty, on_delete=models.CASCADE)
-  value = models.ForeignKey(ItemPropertyValue, on_delete=models.CASCADE)
+  property = models.ForeignKey(Property, on_delete=models.CASCADE)
   
   class Meta:
     unique_together = ("item", "property")
     
   def __str__(self):
-    return f"{self.item.name} - {self.property.name}: {self.value.value}"
+    return f"{self.item.name} - {self.property.name}"
 
 
-class ItemPurchase(models.Model):
+class ItemPurchased(models.Model):
   user = models.ForeignKey(NestifyUser, related_name='purchases', on_delete=models.CASCADE)
   item = models.ForeignKey(Item, on_delete=models.CASCADE)
   quantity = models.PositiveIntegerField(validators=[MinValueValidator(1)], default=1)
@@ -55,9 +54,9 @@ class ItemPurchase(models.Model):
     return f"{self.user.name} purchased {self.item.name} at {self.purchased_at}"
   
   
-class RoomItem(models.Model):
+class RoomItemPurchasedAssignment(models.Model):
   room = models.ForeignKey(Room, related_name='room_items', on_delete=models.CASCADE)
-  item_purchase = models.ForeignKey(ItemPurchase, on_delete=models.CASCADE)
+  item_purchased = models.ForeignKey(ItemPurchased, on_delete=models.CASCADE)
   position_x = models.FloatField(default=0)
   position_y = models.FloatField(default=0)
   position_z = models.FloatField(default=0)
@@ -65,7 +64,7 @@ class RoomItem(models.Model):
   created_at = models.DateTimeField(auto_now_add=True)
   
   def __str__(self):
-    return f"Item {self.item_purchase.item.name} in {self.room.name}"
+    return f"Item {self.item_purchased.item.name} in {self.room.name}"
   
 
 class Transaction(models.Model):

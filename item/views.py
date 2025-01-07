@@ -7,8 +7,8 @@ from rest_framework.status import (
   HTTP_204_NO_CONTENT,
 )
 
-from .serializers import CreateItemSerializer, ItemPropertySerializer, ItemPropertyValueSerializer, ItemSerializer, UpdateItemSerializer
-from .models import Item, ItemProperty, ItemPropertyValue
+from .serializers import CreateItemSerializer, PropertySerializer, PropertyValueSerializer, ItemSerializer, UpdateItemSerializer
+from .models import Item, Property, PropertyValue
 
 
 class CreateListItem(APIView):
@@ -59,10 +59,10 @@ class DeleteRetrieveItem(APIView):
   
 class CreateListPropertyValue(APIView):
   def get(self, request, *args, **kwargs):
-    property_value_list = ItemPropertyValue.objects.all()
-    # property_value_list = ItemProperty.objects.prefetch_related('values').all()
-    # serializer = ItemPropertySerializer(property_value_list, many=True)
-    serializer = ItemPropertyValueSerializer(property_value_list, many=True)
+    property_value_list = PropertyValue.objects.all()
+    # property_value_list = Property.objects.prefetch_related('values').all()
+    # serializer = PropertySerializer(property_value_list, many=True)
+    serializer = PropertyValueSerializer(property_value_list, many=True)
     response = Response({"properties": serializer.data}, status=HTTP_200_OK)
     return response
   
