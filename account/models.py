@@ -3,7 +3,14 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 import random
 
 class NestifyUserManager(BaseUserManager):
+  def get_random_username(self):
+    number = random.randrange(1, 999)
+    str_num = str(number).zfill(3)
+    return f'user-{str_num}'
+  
   def _create_user(self, email, password=None, **kwargs):
+    kwargs.setdefault("username", self.get_random_username())
+    
     if not email:
       raise ValueError("The given email must be set")
     
@@ -30,14 +37,8 @@ class NestifyUserManager(BaseUserManager):
     return self._create_user(email, password, **kwargs)
     
 class NestifyUser(AbstractBaseUser, PermissionsMixin):
-  def get_random_username():
-    number = random.randrange(1, 999)
-    str_num = str(number).zfill(3)
-    return f'user-{str_num}'
-  
-  username = get_random_username()
-  
-  name = models.CharField(max_length=255, blank=False, null=False, default=username)
+  username = models.CharField(max_length=100, blank=False, null=False)
+  name = models.CharField(max_length=255, blank=False, null=False)
   email = models.EmailField(null=False, blank=False, unique=True)
   balance = models.DecimalField(max_digits=10, decimal_places=0, default=0)
   membership = models.ForeignKey('Membership', on_delete=models.SET_NULL, null=True, blank=True)

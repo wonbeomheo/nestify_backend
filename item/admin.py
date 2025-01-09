@@ -12,17 +12,17 @@ class PropertyAssignmentInline(admin.TabularInline):
   model = PropertyAssignment
   extra = 1
   can_delete = True
-  autocomplete_fields = ["property"]
+  autocomplete_fields = ["value"]
   
 @admin.register(Property)
 class PropertyAdmin(admin.ModelAdmin):
-  list_display = ("name", "value")
+  list_display = ("name",)
   search_fields = ("name",)
   inilnes = [PropertyValueInline]
   
 @admin.register(PropertyValue)
 class PropertyValueAdmin(admin.ModelAdmin):
-  list_display = ("value",)
+  list_display = ("property", "value",)
   search_fields = ("value",)
   list_filter = ("value",)
   

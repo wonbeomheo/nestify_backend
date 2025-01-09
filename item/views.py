@@ -7,13 +7,13 @@ from rest_framework.status import (
   HTTP_204_NO_CONTENT,
 )
 
-from .serializers import CreateItemSerializer, PropertySerializer, PropertyValueSerializer, ItemSerializer, UpdateItemSerializer
-from .models import Item, Property, PropertyValue
+from .serializers import CreateItemSerializer, PropertyValueSerializer, ItemSerializer, UpdateItemSerializer
+from .models import Item, PropertyValue
 
 
 class CreateListItem(APIView):
   def get(self, request, *args, **kwargs):
-    items = Item.objects.prefetch_related('properties').all()
+    items = Item.objects.all()
     serializer = ItemSerializer(items, many=True)
     response = Response({'items': serializer.data}, status=HTTP_200_OK)
     return response

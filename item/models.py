@@ -16,32 +16,32 @@ class Item(models.Model):
   
 
 class Property(models.Model):
-  class Meta:
-    unique_together = ("name", "value")
-    
   name = models.CharField(max_length=100, unique=True)
-  value = models.ForeignKey('PropertyValue', on_delete=models.CASCADE, related_name="values")
   
   def __str__(self):
     return self.name
   
   
 class PropertyValue(models.Model):
+  property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name="property")
   value = models.CharField(max_length=100)
     
+  class Meta:
+    unique_together = ("property", "value")
+    
   def __str__(self):
-    return f"{self.property.name}: {self.value}"
+    return f"{self.value}"
   
 
 class PropertyAssignment(models.Model):
   item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="properties")
-  property = models.ForeignKey(Property, on_delete=models.CASCADE)
+  value = models.ForeignKey(PropertyValue, on_delete=models.CASCADE)
   
   class Meta:
-    unique_together = ("item", "property")
+    unique_together = ("item", "value")
     
   def __str__(self):
-    return f"{self.item.name} - {self.property.name}"
+    return f"{self.item.name} - {self.value}"
 
 
 class ItemPurchased(models.Model):
